@@ -2,15 +2,14 @@ import re
 import socket
 import random
 import time
+from struct import *
 
 class Bridge:
-    def __init__(self, ip: str, port: int):
+    def __init__(self):
         self.__ip = None
         self.__port = None
         self.__socket = None
 
-        self.ip = ip
-        self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     @property
@@ -23,9 +22,6 @@ class Bridge:
             raise Exception(f"Wrong ip address")
 
         self.__ip = ip
-
-        if not self.port:
-            return
 
     @property
     def port(self):
@@ -44,16 +40,14 @@ class Bridge:
         self.__socket = socket
 
     def send(self, data):
-        data = bytes(data, 'utf-8')
         self.sock.sendto(data, (self.ip, self.port))
 
 if __name__ == '__main__':
 
-    bridge = Bridge('10.10.10.10', 5000)
+    bridge = Bridge('192.168.69.100', 25565)
 
     while True:
-        data = random.randint(1, 100)
-        data = f"SOMEDATA {data}"
+        data = pack('iiiiii', 1500, 1500, 1500, 1500, 1500, 1500)
 
         bridge.send(data=data)
         time.sleep(1)
